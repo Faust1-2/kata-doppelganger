@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from unittest.mock import Mock
 from mail_sender import MailSender, Request
 
 @dataclass
@@ -11,18 +12,13 @@ class User:
     name: str
     email: str
 
-class MockHttpClient:
-
-    def __init__(self, status) -> None:
-        self.code = status
-
-    def post(self, url, request):
-        return Response(request, self.code)
-
 def test_send_v1():
+    def post(url, request):
+        return Response(request, 200)
+    
+    mockHttpClient = Mock(**{'post.side_effect': post})
     message = 'Hello world'
     user = User('toto', 'toto@titi.com')
-    mockHttpClient = MockHttpClient(200)
     mailSender = MailSender(mockHttpClient)
     request = mailSender.send_v1(user, message).request
     assert request.name == user.name
@@ -31,9 +27,12 @@ def test_send_v1():
     assert request.message == message
 
 def test_send_v2():
+    def post(url, request):
+        return Response(request, 503)
+    
+    mockHttpClient = Mock(**{'post.side_effect': post})
     message = 'Hello world'
     user = User('toto', 'toto@titi.com')
-    mockHttpClient = MockHttpClient(503)
     mailSender = MailSender(mockHttpClient)
     request = mailSender.send_v2(user, message).request
     assert request.name == user.name
