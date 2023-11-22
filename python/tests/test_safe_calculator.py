@@ -1,7 +1,15 @@
 import pytest
+from safe_calculator import SafeCalculator
+
+class MockAuthorizer:
+    def __init__(self, isAuthorized):
+        self.isAuthorized = isAuthorized
+
+    def authorize(self):
+        return self.isAuthorized
 
 
 def test_divide_should_not_raise_any_error_when_authorized():
-    # TODO: write a test that fails due to the bug in
-    # SafeCalculator.add
-    pass
+    mockAuthorizer = MockAuthorizer(True)
+    calculator = SafeCalculator(mockAuthorizer)
+    assert calculator.add(1, 2) == 3

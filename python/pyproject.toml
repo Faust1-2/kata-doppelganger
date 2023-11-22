@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "doppelganger"
 version = "0.1.0"
-authors = ["your-team@efrei.net"]
+authors = ["faustin Dewas <faustin.dewas@efrei.net>"]
 description = "Kata about test doubles"
 readme = "README.md"
 
